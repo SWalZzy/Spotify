@@ -3,9 +3,9 @@ package com.santiagolandeta.spotify;
 import android.graphics.Bitmap;
 
 public class Song {
-    private final String nombre;
-    private final String artista;
-    private final String album;
+    private String nombre;
+    private String artista;
+    private String album;
     private final int imagen;
     private final int cancion;
 
@@ -17,6 +17,9 @@ public class Song {
         this.cancion = cancion;
     }
 
+    public String Concatenar(){
+        return getNombre() + " - " + getArtista() + " - " + getAlbum();
+    }
     public String getNombre() {
         return nombre;
     }

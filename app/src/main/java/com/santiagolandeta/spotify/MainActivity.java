@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
     private boolean isPlaying = false;
     private ArrayList<Song> songList;
     private SongAdapter songAdapter;
+    private TextView tvNombreCancion;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
         setContentView(R.layout.activity_main);
 
         songList = new ArrayList<>();
-        songAdapter = new SongAdapter(songList);
+        songAdapter = new SongAdapter(songList, this);
         RecyclerView recyclerView = findViewById(R.id.rvListado);
         recyclerView.setAdapter(songAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -68,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
         songList.add(new Song("Town", "Kevin", "Town", R.drawable.town, R.raw.town));
 
         seekBar = findViewById(R.id.seekBar);
-        onIndexChange(0);
 
 
         playButton.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
 
             myService.procesarDatos(songList);
             myService.setOnIndexChangeListener(MainActivity.this);
+            onIndexChange(0);
         }
 
         @Override
@@ -118,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
                 myService.pauseMusic();
             } else {
                 myService.playMusic();
+                tvNombreCancion.setSelected(true);
             }
             isPlaying = !isPlaying;
             updatePlayPauseButton();
@@ -158,22 +160,17 @@ public class MainActivity extends AppCompatActivity implements MyService.OnIndex
     @Override
     public void onIndexChange(int newIndex) {
 
-        TextView tvNombreCancion = findViewById(R.id.tvNombreCancion);
-        TextView tvNombreArtista = findViewById(R.id.tvNombreArtista);
-        TextView tvNombreAlbum = findViewById(R.id.tvNombreAlbum);
+        tvNombreCancion = findViewById(R.id.tvInfoCancion);
         ImageView ivImagenCancion = findViewById(R.id.ivReproductor);
 
-        tvNombreCancion.setText(songList.get(newIndex).getNombre());
-        tvNombreArtista.setText(songList.get(newIndex).getArtista());
-        tvNombreAlbum.setText(songList.get(newIndex).getAlbum());
+        tvNombreCancion.setText(songList.get(newIndex).Concatenar());
+        tvNombreCancion.setSelected(true);
         ivImagenCancion.setImageResource(songList.get(newIndex).getImagen());
-        if (myService != null) {
             seekBar.setProgress(0);
             int duration = myService.getDuration();
             seekBar.setMax(duration);
             startSeekBarUpdateTimer();
             updateTiempoTranscurridoRestante(0, myService.getDuration());
-        }
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             int progressChangedValue = 0;
             @Override

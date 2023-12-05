@@ -18,10 +18,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         void onItemClick(int position);
     }
 
-    public SongAdapter(ArrayList<Song> songList) {
+    public SongAdapter(ArrayList<Song> songList, OnItemClickListener onItemClickListener) {
         this.songList = songList;
+        this.onItemClickListener = onItemClickListener;
     }
-
 
     @NonNull
     @Override
